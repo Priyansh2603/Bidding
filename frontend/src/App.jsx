@@ -5,16 +5,21 @@ import './App.css'
 import FormComponent from './components/Form'
 import BiddingData from './components/AllBids'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import Layout from './layouts/UserLayout'
+import { Toaster } from 'react-hot-toast'
 function App() {
 
   return (
     <>
       <Router>
-      <Routes>
-        <Route path="/" element={<FormComponent />} />
-        <Route path="/all" element={<BiddingData />} />
-      </Routes>
-    </Router>
+        <Toaster />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<FormComponent />} />
+            <Route path="all" element={<BiddingData />} />
+          </Route>
+        </Routes>
+      </Router>
     </>
   )
 }
