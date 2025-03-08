@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import axiosAPI from '../api/axiosApi';
 
 const FormComponent = () => {
   const { register, handleSubmit, reset } = useForm();
-
+  const axios = axiosAPI();
   const onSubmit = async (data) => {
     try {
-      await axios.post('http://localhost:5000/api/form', data);
+      await axios.post('/form', data);
       alert('Form submitted successfully!');
       reset();
     } catch (error) {
