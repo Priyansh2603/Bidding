@@ -10,8 +10,21 @@ const businessCategories = [
   { value: 'wholesale', label: 'Wholesale' },
   { value: 'manufacturing', label: 'Manufacturing' },
   { value: 'services', label: 'Services' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'education', label: 'Education' },
+  { value: 'real-estate', label: 'Real Estate' },
+  { value: 'transportation', label: 'Transportation & Logistics' },
+  { value: 'hospitality', label: 'Hospitality & Tourism' },
+  { value: 'construction', label: 'Construction' },
+  { value: 'agriculture', label: 'Agriculture' },
+  { value: 'automotive', label: 'Automotive' },
+  { value: 'media', label: 'Media & Entertainment' },
+  { value: 'energy', label: 'Energy & Utilities' },
   { value: 'other', label: 'Other' }
 ];
+
 
 const FormComponent = () => {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
