@@ -66,7 +66,7 @@ const FormComponent = () => {
           
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Mobile No</label>
-            <div className="flex items-center border relative border-gray-700 rounded-lg ">
+            <div className="flex items-center relative rounded-lg ">
               <span className="text-gray-900 absolute left-[0.05rem] p-3 px-2 rounded-l-lg bg-gray-200 mr-2">+91</span>
               <input {...register('mobile', { required: 'Mobile number is required', pattern: { value: /^[0-9]{10}$/, message: 'Enter a valid 10-digit mobile number' } })} placeholder="Enter mobile number" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600 pl-12" />
             </div>
