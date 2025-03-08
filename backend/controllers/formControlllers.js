@@ -1,4 +1,4 @@
-const Form = require("../models/form");
+const Form = require("../models/Form");
 
 exports.addBidd = async (req, res) => {
     try {
