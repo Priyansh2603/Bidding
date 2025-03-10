@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import axiosAPI from '../api/axiosApi';
-import Navbar from './Navbar';
 import Select from 'react-select';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -27,13 +26,22 @@ const businessCategories = [
 
 
 const FormComponent = () => {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
   const axios = axiosAPI();
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [customCategory, setCustomCategory] = useState('');
+  const mobile = watch("mobile", "");
 
+  const handleMobileChange = (e) => {
+    let value = e.target.value.replace(/\D/g, ""); // Sirf numbers allow karega
+    if (value.length > 10) {
+      value = value.slice(0, 10); // Bas pehle ke 10 digits rakhega
+    }
+    setValue("mobile", value); // Input update karega bina refresh ke
+  };
   const onSubmit = async (data) => {
-    if(!confirm('Are you sure submitting the form?')) return;
+    if (!confirm('Are you sure submitting the form?')) return;
     if (selectedCategory?.value === 'other') {
       data.businessCategory = customCategory;
     } else {
@@ -71,27 +79,41 @@ const FormComponent = () => {
             <input {...register('name', { required: 'Name is required' })} required placeholder="Enter your name" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
             {errors.name && <p className="text-red-600 text-sm">{errors.name.message}</p>}
           </div>
-          
+
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Company Name (Optional)</label>
             <input {...register('companyName')} placeholder="Enter company name" required className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
           </div>
-          
+
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Mobile No</label>
-            <div className="flex items-center relative rounded-lg ">
-              <span className="text-gray-900 absolute left-[0.05rem] p-3 px-2 rounded-l-lg bg-gray-200 mr-2">+91</span>
-              <input {...register('mobile', { required: 'Mobile number is required', pattern: { value: /^[0-9]{10}$/, message: 'Enter a valid 10-digit mobile number' } })} placeholder="Enter mobile number" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600 pl-12" />
+            <div className="flex items-center relative rounded-lg">
+              <span className="text-gray-900 absolute left-[0.05rem] p-3 px-2 rounded-l-lg bg-gray-200 mr-2">
+                +91
+              </span>
+              <input
+                {...register("mobile", {
+                  required: "Mobile number is required",
+                  pattern: {
+                    value: /^[0-9]{10}$/,
+                    message: "Enter a valid 10-digit mobile number",
+                  },
+                })}
+                placeholder="Enter mobile number"
+                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600 pl-12"
+                value={mobile}
+                onChange={handleMobileChange}
+              />
             </div>
             {errors.mobile && <p className="text-red-600 text-sm">{errors.mobile.message}</p>}
           </div>
-          
+
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Email (Optional)</label>
             <input required {...register('email', { pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } })} placeholder="Enter email" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
             {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
           </div>
-          
+
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Business Category</label>
             <Select
@@ -113,17 +135,17 @@ const FormComponent = () => {
               />
             )}
           </div>
-          
+
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">GST Status</label>
             <select {...register('gstStatus', { required: 'GST Status is required' })} required className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600">
-            <option value="" disabled>Select GST Status</option>
+              <option value="" disabled>Select GST Status</option>
               <option value="gst">GST</option>
               <option value="non-gst">Non-GST</option>
             </select>
             {errors.gstStatus && <p className="text-red-600 text-sm">{errors.gstStatus.message}</p>}
           </div>
-          
+
           <div className="md:col-span-2">
             <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Submit</button>
           </div>
