@@ -82,7 +82,7 @@ const FormComponent = () => {
 
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Company Name (Optional)</label>
-            <input {...register('companyName')} placeholder="Enter company name" required className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
+            <input {...register('companyName')} placeholder="Enter company name" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
           </div>
 
           <div>
@@ -110,7 +110,7 @@ const FormComponent = () => {
 
           <div>
             <label className="block text-gray-900 bg-white font-medium mb-1">Email (Optional)</label>
-            <input required {...register('email', { pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } })} placeholder="Enter email" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
+            <input {...register('email', { pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } })} placeholder="Enter email" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
             {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
           </div>
 
