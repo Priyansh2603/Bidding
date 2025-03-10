@@ -80,8 +80,8 @@ const FormComponent = () => {
 
   return (
     <div className=" flex bg-white text-gray-900">
-      <div className="w-full p-10 shadow-2xl max-h-screen rounded-xl border border-gray-700 relative">
-        <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-black font-bold px-6 py-2 rounded-full shadow-lg animate-pulse">
+      <div className="w-full p-10 shadow-2xl rounded-xl border border-gray-700 relative">
+        <div className="absolute top-6 left-1/2 w-full md:w-auto -translate-x-1/2 bg-yellow-400 text-black font-bold px-3 md:px-6 py-2 rounded-full shadow-lg animate-pulse">
           🎉 Early Bird Offer: Apply Free!
         </div>
         <h2 className="text-4xl font-semibold text-center mt-10 mb-10 text-black">
@@ -103,7 +103,7 @@ const FormComponent = () => {
               required
               className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
             >
-              <option value="" disabled>
+              <option value="">
                 Select Individual/Corporate
               </option>
               <option value="Individual">Individual</option>
