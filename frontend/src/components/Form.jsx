@@ -1,92 +1,156 @@
-import { useForm } from 'react-hook-form';
-import axiosAPI from '../api/axiosApi';
-import Select from 'react-select';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
+import { useForm } from "react-hook-form";
+import axiosAPI from "../api/axiosApi";
+import Select from "react-select";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const businessCategories = [
-  { value: 'retail', label: 'Retail' },
-  { value: 'wholesale', label: 'Wholesale' },
-  { value: 'manufacturing', label: 'Manufacturing' },
-  { value: 'services', label: 'Services' },
-  { value: 'technology', label: 'Technology' },
-  { value: 'healthcare', label: 'Healthcare' },
-  { value: 'finance', label: 'Finance' },
-  { value: 'education', label: 'Education' },
-  { value: 'real-estate', label: 'Real Estate' },
-  { value: 'transportation', label: 'Transportation & Logistics' },
-  { value: 'hospitality', label: 'Hospitality & Tourism' },
-  { value: 'construction', label: 'Construction' },
-  { value: 'agriculture', label: 'Agriculture' },
-  { value: 'automotive', label: 'Automotive' },
-  { value: 'media', label: 'Media & Entertainment' },
-  { value: 'energy', label: 'Energy & Utilities' },
-  { value: 'other', label: 'Other' }
+  { value: "retail", label: "Retail" },
+  { value: "wholesale", label: "Wholesale" },
+  { value: "ecommerce", label: "E-commerce" },
+  { value: "manufacturing", label: "Manufacturing & Industrial" },
+  { value: "textiles", label: "Textiles & Garments" },
+  { value: "electronics", label: "Electronics & Hardware" },
+  { value: "pharmaceuticals", label: "Pharmaceuticals & Chemicals" },
+  { value: "services", label: "Professional Services" },
+  { value: "it-software", label: "IT & Software Development" },
+  { value: "marketing", label: "Marketing & Advertising" },
+  { value: "consulting", label: "Consulting Services" },
+  { value: "legal", label: "Legal & Compliance" },
+  { value: "finance", label: "Finance & Accounting" },
+  { value: "healthcare", label: "Healthcare & Medical" },
+  { value: "education", label: "Education & Training" },
+  { value: "real-estate", label: "Real Estate & Property" },
+  { value: "transportation", label: "Transportation & Logistics" },
+  { value: "hospitality", label: "Hospitality & Tourism" },
+  { value: "construction", label: "Construction & Infrastructure" },
+  { value: "agriculture", label: "Agriculture & Farming" },
+  { value: "automotive", label: "Automotive & Vehicle Services" },
+  { value: "media", label: "Media & Entertainment" },
+  { value: "energy", label: "Energy & Renewable Resources" },
+  { value: "food-beverage", label: "Food & Beverage" },
+  { value: "event-management", label: "Event Management" },
+  { value: "other", label: "Other" }
 ];
 
 
 const FormComponent = () => {
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const axios = axiosAPI();
 
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [customCategory, setCustomCategory] = useState('');
+  const [customCategory, setCustomCategory] = useState("");
+
+  const applyingFor = watch("applyingFor", ""); // Get the selected type
   const mobile = watch("mobile", "");
 
   const handleMobileChange = (e) => {
-    let value = e.target.value.replace(/\D/g, ""); // Sirf numbers allow karega
+    let value = e.target.value.replace(/\D/g, ""); // Only numbers allowed
     if (value.length > 10) {
-      value = value.slice(0, 10); // Bas pehle ke 10 digits rakhega
+      value = value.slice(0, 10); // Limit to 10 digits
     }
-    setValue("mobile", value); // Input update karega bina refresh ke
+    setValue("mobile", value);
   };
+
   const onSubmit = async (data) => {
-    if (!confirm('Are you sure submitting the form?')) return;
-    if (selectedCategory?.value === 'other') {
+    if (!confirm("Are you sure submitting the form?")) return;
+    if (selectedCategory?.value === "other") {
       data.businessCategory = customCategory;
     } else {
       data.businessCategory = selectedCategory?.value;
     }
 
     try {
-      await axios.post('/form', data);
-      toast.success('Form submitted successfully!');
+      await axios.post("/form", data);
+      toast.success("Form submitted successfully!");
       reset();
       setSelectedCategory(null);
-      setCustomCategory('');
+      setCustomCategory("");
     } catch (error) {
-      toast.error('Error submitting form');
+      toast.error("Error submitting form");
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-white text-gray-900">
-      <div className="w-full p-10 w-full shadow-2xl max-h-screen rounded-xl border border-gray-700">
-        <h2 className="text-4xl font-semibold text-center mb-10 text-blue-500">Apply Now</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className=" flex bg-white text-gray-900">
+      <div className="w-full p-10 shadow-2xl max-h-screen rounded-xl border border-gray-700 relative">
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 bg-yellow-400 text-black font-bold px-6 py-2 rounded-full shadow-lg animate-pulse">
+          🎉 Early Bird Offer: Apply Free!
+        </div>
+        <h2 className="text-4xl font-semibold text-center mt-10 mb-10 text-black">
+          Apply Now
+        </h2>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          {/* Applying For */}
           <div className="md:col-span-2">
-            <label className="block text-gray-900 bg-white font-medium mb-1">Applying For</label>
-            <select {...register('applyingFor', { required: 'Applying For is required' })} required className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600">
-              <option value="" disabled>Select Buyer/Supplier</option>
-              <option value="buyer">Buyer</option>
-              <option value="supplier">Supplier</option>
+            <label className="block text-gray-900 bg-white font-medium mb-1">
+              Applying For
+            </label>
+            <select
+              {...register("applyingFor", {
+                required: "Applying For is required",
+              })}
+              required
+              className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
+            >
+              <option value="" disabled>
+                Select Individual/Corporate
+              </option>
+              <option value="Individual">Individual</option>
+              <option value="Corporate">Corporate</option>
             </select>
-            {errors.applyingFor && <p className="text-red-600 text-sm">{errors.applyingFor.message}</p>}
+            {errors.applyingFor && (
+              <p className="text-red-600 text-sm">
+                {errors.applyingFor.message}
+              </p>
+            )}
           </div>
 
+          {/* Name */}
           <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">Name</label>
-            <input {...register('name', { required: 'Name is required' })} required placeholder="Enter your name" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
-            {errors.name && <p className="text-red-600 text-sm">{errors.name.message}</p>}
+            <label className="block text-gray-900 bg-white font-medium mb-1">
+              Name
+            </label>
+            <input
+              {...register("name", { required: "Name is required" })}
+              required
+              placeholder="Enter your name"
+              className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
+            />
+            {errors.name && (
+              <p className="text-red-600 text-sm">{errors.name.message}</p>
+            )}
           </div>
 
-          <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">Company Name (Optional)</label>
-            <input {...register('companyName')} placeholder="Enter company name" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
-          </div>
+          {/* Company Name (Hidden for Individual) */}
+          {applyingFor !== "Individual" && (
+            <div>
+              <label className="block text-gray-900 bg-white font-medium mb-1">
+                Company Name (Optional)
+              </label>
+              <input
+                {...register("companyName")}
+                placeholder="Enter company name"
+                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
+              />
+            </div>
+          )}
 
+          {/* Mobile Number */}
           <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">Mobile No</label>
+            <label className="block text-gray-900 bg-white font-medium mb-1">
+              Mobile No
+            </label>
             <div className="flex items-center relative rounded-lg">
               <span className="text-gray-900 absolute left-[0.05rem] p-3 px-2 rounded-l-lg bg-gray-200 mr-2">
                 +91
@@ -100,22 +164,41 @@ const FormComponent = () => {
                   },
                 })}
                 placeholder="Enter mobile number"
-                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600 pl-12"
+                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black pl-12"
                 value={mobile}
                 onChange={handleMobileChange}
               />
             </div>
-            {errors.mobile && <p className="text-red-600 text-sm">{errors.mobile.message}</p>}
+            {errors.mobile && (
+              <p className="text-red-600 text-sm">{errors.mobile.message}</p>
+            )}
           </div>
 
+          {/* Email */}
           <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">Email (Optional)</label>
-            <input {...register('email', { pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } })} placeholder="Enter email" className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600" />
-            {errors.email && <p className="text-red-600 text-sm">{errors.email.message}</p>}
+            <label className="block text-gray-900 bg-white font-medium mb-1">
+              Email (Optional)
+            </label>
+            <input
+              {...register("email", {
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Enter a valid email address",
+                },
+              })}
+              placeholder="Enter email"
+              className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
+            />
+            {errors.email && (
+              <p className="text-red-600 text-sm">{errors.email.message}</p>
+            )}
           </div>
 
+          {/* Business Category */}
           <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">Business Category</label>
+            <label className="block text-gray-900 bg-white font-medium mb-1">
+              Business Category
+            </label>
             <Select
               options={businessCategories}
               isSearchable
@@ -124,30 +207,45 @@ const FormComponent = () => {
               className="text-gray-900 w-full p-1 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-0"
               onChange={(selectedOption) => setSelectedCategory(selectedOption)}
             />
-            {selectedCategory?.value === 'other' && (
+            {selectedCategory?.value === "other" && (
               <input
                 type="text"
-                required={selectedCategory?.value === 'other'}
+                required
                 placeholder="Enter custom category"
-                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600 mt-2"
+                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black mt-2"
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
               />
             )}
           </div>
 
-          <div>
-            <label className="block text-gray-900 bg-white font-medium mb-1">GST Status</label>
-            <select {...register('gstStatus', { required: 'GST Status is required' })} required className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-600">
-              <option value="" disabled>Select GST Status</option>
-              <option value="gst">GST</option>
-              <option value="non-gst">Non-GST</option>
-            </select>
-            {errors.gstStatus && <p className="text-red-600 text-sm">{errors.gstStatus.message}</p>}
-          </div>
+          {/* GST Status (Hidden for Individual) */}
+          {applyingFor !== "Individual" && (
+            <div>
+              <label className="block text-gray-900 bg-white font-medium mb-1">
+                GST Status
+              </label>
+              <select
+                {...register("gstStatus")}
+                className="w-full p-3 border border-gray-700 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-black"
+              >
+                <option value="" disabled>
+                  Select GST Status
+                </option>
+                <option value="gst">GST</option>
+                <option value="non-gst">Non-GST</option>
+              </select>
+            </div>
+          )}
 
+          {/* Submit Button */}
           <div className="md:col-span-2">
-            <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Submit</button>
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </div>
