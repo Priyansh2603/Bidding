@@ -53,7 +53,6 @@ export default function Login({ setUser }) {
                     const { response } = eventCallback;
                     console.log(response);
                     if (response.status === "SUCCESS") {
-                        toast.success('Login Successful!');
                     }
                     setToken(response.token);
                     console.log("Authenticated Token:", response.token);
@@ -96,7 +95,6 @@ export default function Login({ setUser }) {
             countryCode: "+91",
         });
         if (response.success) {
-            toast.success("Otp Verified");
             setError('');
             setUser(true)
         } else {
