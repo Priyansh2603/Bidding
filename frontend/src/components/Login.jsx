@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-export default function Login({ checkout }) {
+export default function Login({ setUser }) {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState("");
     const [otp, setOtp] = useState("");
@@ -120,8 +120,8 @@ export default function Login({ checkout }) {
     };
 
     return (
-        <div className={`flex items-center justify-center ${!checkout && "min-h-[80vh] bg-transparent"} px-4`}>
-            <div className={`bg-white shadow-lg rounded-lg p-6 md:p-8 w-full ${!checkout ? 'max-w-xl' : 'max-w-xl'}`}>
+        <div className={`flex items-center justify-center ${ "min-h-[80vh] bg-transparent"} px-4`}>
+            <div className={`bg-white shadow-lg rounded-lg p-6 md:p-8 w-full max-w-xl`}>
                 <h2 className="text-center text-black text-2xl font-semibold mb-6">Verify Number</h2>
 
                 {error && <p className="text-red-500 text-sm text-center mb-3">{error}</p>}
