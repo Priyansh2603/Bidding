@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 // import { clearCart, setCart } from "../redux/cart/cartSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
+import axiosAPI from "../api/axiosApi";
 
 export default function Login({ setUser }) {
     const [phone, setPhone] = useState("");
@@ -16,9 +17,7 @@ export default function Login({ setUser }) {
     const [error, setError] = useState("");
     const [isOtpLogin, setIsOtpLogin] = useState(false);
     const [otpSent, setOtpSent] = useState(false);
-    //   const cart = useSelector((state) => state.cart.items)
-    //   const axios = UserAxiosAPI();
-    //   const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [authMethod, setAuthMethod] = useState("PHONE");
     const [email, setEmail] = useState("");
@@ -26,7 +25,19 @@ export default function Login({ setUser }) {
     const [sdkLoaded, setSdkLoaded] = useState(false);
     const [isResendDisabled, setIsResendDisabled] = useState(false);
     const [resendTimer, setResendTimer] = useState(60);
+    const checkUser = async()=>{
+        try{
+            const {data} = await axios.get('user/check');
+            setUser(data.user);
+        }catch(e){
+            console.log(e);
+        }
+    }
+    useEffect(()=>{
+        checkUser();
+    },[])
     useEffect(() => {
+        
         if (!sdkLoaded) {
             const script = document.createElement("script");
             script.id = "otpless-sdk";
@@ -87,7 +98,21 @@ export default function Login({ setUser }) {
         startResendTimer();
         window.OTPlessSignin.initiate(options);
     };
+    const axios = axiosAPI();
+    const handleOtpVerification = async()=>{
+        try{
+            const {data} = await axios.post('user/otp-verified',{phone});
+            setUser(data.user);
+            setError('');
+            localStorage.setItem('BidA2ZUser',data.token);
+        }catch(e){
+            setError('Something went wrong! Try Again');
+        }finally{
+            setLoading(false);
+        }
+    }
     const verifyOTP = async () => {
+        setLoading(true);
         const response = await window.OTPlessSignin.verify({
             channel: "PHONE",
             phone,
@@ -95,8 +120,9 @@ export default function Login({ setUser }) {
             countryCode: "+91",
         });
         if (response.success) {
+            console.log(response);
             setError('');
-            setUser(true)
+            handleOtpVerification();
         } else {
             if (response.statusCode == 400) {
                 setError("Invalid Otp!")
@@ -133,7 +159,7 @@ export default function Login({ setUser }) {
                             value={phone}
                             onChange={(e) => { if (e.target.value?.length > 10) { return }; setPhone(e.target.value) }}
                             className="w-full border border-gray-300 px-4 py-2 rounded-md pl-12 focus:ring-2 focus:ring-blue-500 outline-none"
-                        /><span className="absolute left-0 bg-gray-200 px-2 h-full rounded-l-md py-2">+91</span></div>
+                        /><span className="absolute left-0 bg-teal-500 px-2 h-full rounded-l-md py-2">+91</span></div>
 
                         {otpSent ? (
                             <input
@@ -157,9 +183,10 @@ export default function Login({ setUser }) {
                     {otpSent && <button
                         type="button"
                         onClick={verifyOTP}
+                        disabled={loading}
                         className="w-full bg-blue-600 text-white py-2 rounded-md mt-2 hover:bg-blue-700 transition"
                     >
-                       Verify OTP
+                       {loading?'Verifying...':'Verify OTP'}
                     </button>}
                 </form>
                 {  otpSent && <div className="flex justify-center">

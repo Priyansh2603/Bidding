@@ -17,7 +17,7 @@ function App() {
         <Toaster />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={user?<FormComponent />:<Login setUser={setUser}/>} />
+            <Route index element={user?<FormComponent user={user} />:<Login setUser={setUser}/>} />
             <Route path="all" element={<BiddingData />} />
             
           </Route>

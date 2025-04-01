@@ -8,6 +8,7 @@ const FormSchema = new mongoose.Schema({
     email: String,
     businessCategory: String,
     gstStatus: String,
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" } 
   });
   const Form = mongoose.model('Form', FormSchema);
   module.exports = Form;

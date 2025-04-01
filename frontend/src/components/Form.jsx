@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import axiosAPI from "../api/axiosApi";
 import Select from "react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const businessCategories = [
@@ -34,7 +34,7 @@ const businessCategories = [
 ];
 
 
-const FormComponent = () => {
+const FormComponent = ({user}) => {
   const {
     register,
     handleSubmit,
@@ -58,7 +58,12 @@ const FormComponent = () => {
     }
     setValue("mobile", value);
   };
-
+  const handleUserMobileChange = () => {
+    setValue("mobile", user.phone);
+  };
+  useEffect(()=>{
+    handleUserMobileChange();
+  },[user])
   const onSubmit = async (data) => {
     if (!confirm("Are you sure submitting the form?")) return;
     if (selectedCategory?.value === "other") {
